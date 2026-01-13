@@ -20,6 +20,7 @@ const chatCompletionSchema = Joi.object({
     max_tokens: Joi.number().integer().min(1).default(500),
     temperature: Joi.number().min(0),
     top_p: Joi.number().min(0).max(1),
+    n: Joi.number().integer().min(1).default(1),
     reasoning_budget: Joi.number().integer().min(1),
     seed: Joi.number().integer(),
     chat_template_kwargs: Joi.object({
@@ -71,6 +72,9 @@ export const chatCompletion = async (req, res, next) => {
         }
         if (value.top_p !== undefined) {
             huggingFaceRequestBody.top_p = value.top_p;
+        }
+        if (value.n !== undefined) {
+            huggingFaceRequestBody.n = value.n;
         }
         if (value.reasoning_budget !== undefined) {
             huggingFaceRequestBody.reasoning_budget = value.reasoning_budget;

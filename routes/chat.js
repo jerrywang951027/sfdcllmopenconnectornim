@@ -57,6 +57,11 @@ const router = express.Router();
  *                 minimum: 0
  *                 maximum: 1
  *                 description: Nucleus sampling parameter
+ *               n:
+ *                 type: integer
+ *                 minimum: 1
+ *                 default: 1
+ *                 description: Number of chat completion choices to generate
  *               reasoning_budget:
  *                 type: integer
  *                 minimum: 1
@@ -77,6 +82,7 @@ const router = express.Router();
  *                 content: "what is the meaning of repudiation"
  *             temperature: 1
  *             top_p: 1
+ *             n: 1
  *             max_tokens: 16384
  *             reasoning_budget: 16384
  *             seed: 42
