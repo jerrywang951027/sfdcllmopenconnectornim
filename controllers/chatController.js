@@ -2,17 +2,9 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Joi from 'joi';
 import config from '../config/index.js';
-import winston from 'winston';
+import createSanitizedLogger from '../utils/logger.js';
 
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.json(),
-    transports: [
-        new winston.transports.Console({
-            format: winston.format.simple(),
-        }),
-    ],
-});
+const logger = createSanitizedLogger();
 
 const chatCompletionSchema = Joi.object({
     messages: Joi.array()
@@ -41,6 +33,9 @@ export const chatCompletion = async (req, res, next) => {
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
         }
+
+        // Log received request payload
+        logger.info('Received request payload:', JSON.stringify(value));
 
         // Optimize message processing
         const systemMessages = [];
@@ -80,6 +75,9 @@ export const chatCompletion = async (req, res, next) => {
             huggingFaceRequestBody.chat_template_kwargs = value.chat_template_kwargs;
         }
 
+        // Log outbound request payload
+        logger.info('Outbound request payload:', JSON.stringify(huggingFaceRequestBody));
+
         const response = await axios.post(
             config.useThirdPartyRouter 
                 ? `${config.huggingFaceApiUrl}`
@@ -102,8 +100,19 @@ export const chatCompletion = async (req, res, next) => {
             usage: response.data.usage,
         };
 
+        // Log received response payload (success)
+        logger.info('Received response payload (success):', JSON.stringify(response.data));
+
         res.status(200).json(reshapedResponse);
     } catch (error) {
+        // Log received response payload (failure)
+        const errorResponse = {
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            data: error.response?.data,
+            message: error.message,
+        };
+        logger.error('Received response payload (failure):', JSON.stringify(errorResponse));
         logger.error('Error in chat completion:', {
             status: error.response?.status,
             statusText: error.response?.statusText,
