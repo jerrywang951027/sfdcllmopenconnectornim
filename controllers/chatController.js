@@ -31,18 +31,18 @@ export const chatCompletion = async (req, res, next) => {
     // Test log to verify function execution
     process.stdout.write(`[DEBUG] chatCompletion function called\n`);
     
+    // Log received request payload BEFORE validation
+    const receivedPayload = `Received request payload: ${JSON.stringify(req.body)}`;
+    logger.info(receivedPayload);
+    // Use process.stdout.write for guaranteed Heroku visibility
+    process.stdout.write(`[INFO] ${receivedPayload}\n`);
+    
     try {
         const { error, value } = chatCompletionSchema.validate(req.body);
         if (error) {
             process.stderr.write(`[ERROR] Validation error: ${error.details[0].message}\n`);
             return res.status(400).json({ error: error.details[0].message });
         }
-
-        // Log received request payload
-        const receivedPayload = `Received request payload: ${JSON.stringify(value)}`;
-        logger.info(receivedPayload);
-        // Use process.stdout.write for guaranteed Heroku visibility
-        process.stdout.write(`[INFO] ${receivedPayload}\n`);
 
         // Optimize message processing
         const systemMessages = [];
