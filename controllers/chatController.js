@@ -35,7 +35,7 @@ export const chatCompletion = async (req, res, next) => {
         }
 
         // Log received request payload
-        logger.info('Received request payload:', JSON.stringify(value));
+        logger.info(`Received request payload: ${JSON.stringify(value)}`);
 
         // Optimize message processing
         const systemMessages = [];
@@ -76,7 +76,7 @@ export const chatCompletion = async (req, res, next) => {
         }
 
         // Log outbound request payload
-        logger.info('Outbound request payload:', JSON.stringify(huggingFaceRequestBody));
+        logger.info(`Outbound request payload: ${JSON.stringify(huggingFaceRequestBody)}`);
 
         const response = await axios.post(
             config.useThirdPartyRouter 
@@ -101,7 +101,7 @@ export const chatCompletion = async (req, res, next) => {
         };
 
         // Log received response payload (success)
-        logger.info('Received response payload (success):', JSON.stringify(response.data));
+        logger.info(`Received response payload (success): ${JSON.stringify(response.data)}`);
 
         res.status(200).json(reshapedResponse);
     } catch (error) {
@@ -112,7 +112,7 @@ export const chatCompletion = async (req, res, next) => {
             data: error.response?.data,
             message: error.message,
         };
-        logger.error('Received response payload (failure):', JSON.stringify(errorResponse));
+        logger.error(`Received response payload (failure): ${JSON.stringify(errorResponse)}`);
         logger.error('Error in chat completion:', {
             status: error.response?.status,
             statusText: error.response?.statusText,
