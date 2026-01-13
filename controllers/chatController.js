@@ -28,16 +28,21 @@ const chatCompletionSchema = Joi.object({
 });
 
 export const chatCompletion = async (req, res, next) => {
+    // Test log to verify function execution
+    process.stdout.write(`[DEBUG] chatCompletion function called\n`);
+    
     try {
         const { error, value } = chatCompletionSchema.validate(req.body);
         if (error) {
+            process.stderr.write(`[ERROR] Validation error: ${error.details[0].message}\n`);
             return res.status(400).json({ error: error.details[0].message });
         }
 
         // Log received request payload
         const receivedPayload = `Received request payload: ${JSON.stringify(value)}`;
         logger.info(receivedPayload);
-        console.log(`[INFO] ${receivedPayload}`);
+        // Use process.stdout.write for guaranteed Heroku visibility
+        process.stdout.write(`[INFO] ${receivedPayload}\n`);
 
         // Optimize message processing
         const systemMessages = [];
@@ -80,7 +85,8 @@ export const chatCompletion = async (req, res, next) => {
         // Log outbound request payload
         const outboundPayload = `Outbound request payload: ${JSON.stringify(huggingFaceRequestBody)}`;
         logger.info(outboundPayload);
-        console.log(`[INFO] ${outboundPayload}`);
+        // Use process.stdout.write for guaranteed Heroku visibility
+        process.stdout.write(`[INFO] ${outboundPayload}\n`);
 
         const response = await axios.post(
             config.useThirdPartyRouter 
@@ -107,7 +113,8 @@ export const chatCompletion = async (req, res, next) => {
         // Log received response payload (success)
         const successResponse = `Received response payload (success): ${JSON.stringify(response.data)}`;
         logger.info(successResponse);
-        console.log(`[INFO] ${successResponse}`);
+        // Use process.stdout.write for guaranteed Heroku visibility
+        process.stdout.write(`[INFO] ${successResponse}\n`);
 
         res.status(200).json(reshapedResponse);
     } catch (error) {
@@ -120,7 +127,8 @@ export const chatCompletion = async (req, res, next) => {
         };
         const failureResponse = `Received response payload (failure): ${JSON.stringify(errorResponse)}`;
         logger.error(failureResponse);
-        console.error(`[ERROR] ${failureResponse}`);
+        // Use process.stderr.write for guaranteed Heroku visibility
+        process.stderr.write(`[ERROR] ${failureResponse}\n`);
         logger.error('Error in chat completion:', {
             status: error.response?.status,
             statusText: error.response?.statusText,
