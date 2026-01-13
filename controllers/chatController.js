@@ -35,7 +35,9 @@ export const chatCompletion = async (req, res, next) => {
         }
 
         // Log received request payload
-        logger.info(`Received request payload: ${JSON.stringify(value)}`);
+        const receivedPayload = `Received request payload: ${JSON.stringify(value)}`;
+        logger.info(receivedPayload);
+        console.log(`[INFO] ${receivedPayload}`);
 
         // Optimize message processing
         const systemMessages = [];
@@ -76,7 +78,9 @@ export const chatCompletion = async (req, res, next) => {
         }
 
         // Log outbound request payload
-        logger.info(`Outbound request payload: ${JSON.stringify(huggingFaceRequestBody)}`);
+        const outboundPayload = `Outbound request payload: ${JSON.stringify(huggingFaceRequestBody)}`;
+        logger.info(outboundPayload);
+        console.log(`[INFO] ${outboundPayload}`);
 
         const response = await axios.post(
             config.useThirdPartyRouter 
@@ -101,7 +105,9 @@ export const chatCompletion = async (req, res, next) => {
         };
 
         // Log received response payload (success)
-        logger.info(`Received response payload (success): ${JSON.stringify(response.data)}`);
+        const successResponse = `Received response payload (success): ${JSON.stringify(response.data)}`;
+        logger.info(successResponse);
+        console.log(`[INFO] ${successResponse}`);
 
         res.status(200).json(reshapedResponse);
     } catch (error) {
@@ -112,7 +118,9 @@ export const chatCompletion = async (req, res, next) => {
             data: error.response?.data,
             message: error.message,
         };
-        logger.error(`Received response payload (failure): ${JSON.stringify(errorResponse)}`);
+        const failureResponse = `Received response payload (failure): ${JSON.stringify(errorResponse)}`;
+        logger.error(failureResponse);
+        console.error(`[ERROR] ${failureResponse}`);
         logger.error('Error in chat completion:', {
             status: error.response?.status,
             statusText: error.response?.statusText,
