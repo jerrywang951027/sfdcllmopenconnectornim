@@ -60,6 +60,22 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// Redirect root endpoint to API documentation (browser only, not API requests)
+app.get('/', (req, res) => {
+    // Only redirect if Accept header indicates browser request (HTML)
+    const acceptHeader = req.get('Accept') || '';
+    if (acceptHeader.includes('text/html')) {
+        res.redirect('/api-docs');
+    } else {
+        // For API requests, return JSON response
+        res.status(200).json({
+            message: 'sfdcllmopenconnectornim API',
+            documentation: '/api-docs',
+            openapi: '/api-docs.json',
+        });
+    }
+});
+
 // Swagger UI - must be before routes to avoid CSP conflicts
 app.use(
     '/api-docs',
