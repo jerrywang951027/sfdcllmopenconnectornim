@@ -4,7 +4,7 @@ const options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'sfdcllmopenconnectornim API',
+            title: 'llm-open-connector-nvidia API',
             version: '1.0.0',
             description: 'API proxy for Hugging Face chat completions with security and validation',
             contact: {

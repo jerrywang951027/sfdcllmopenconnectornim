@@ -69,7 +69,7 @@ app.get('/', (req, res) => {
     } else {
         // For API requests, return JSON response
         res.status(200).json({
-            message: 'sfdcllmopenconnectornim API',
+            message: 'llm-open-connector-nvidia API',
             documentation: '/api-docs',
             openapi: '/api-docs.json',
         });
@@ -82,7 +82,7 @@ app.use(
     swaggerUi.serve,
     swaggerUi.setup(swaggerSpec, {
         customCss: '.swagger-ui .topbar { display: none }',
-        customSiteTitle: 'sfdcllmopenconnectornim API Documentation',
+        customSiteTitle: 'llm-open-connector-nvidia API Documentation',
     })
 );
 

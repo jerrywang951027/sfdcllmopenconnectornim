@@ -1,5 +1,5 @@
 {
-    "name": "sfdcllmopenconnectornim",
+    "name": "llm-open-connector-nvidia",
     "version": "1.0.0",
     "description": "Heroku Node.js app to proxy chat completions",
     "main": "index.js",
